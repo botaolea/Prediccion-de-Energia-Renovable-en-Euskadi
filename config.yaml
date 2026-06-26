@@ -1,0 +1,72 @@
+# config.yaml - Archivo de configuración central
+# Plataforma de Predicción de Energía Renovable - Euskadi
+
+project:
+  name: "Predicción Energía Renovable Euskadi"
+  version: "1.0.0"
+  description: "Predicción de generación solar fotovoltaica en Bizkaia/Euskadi usando datos abiertos reales"
+  author: "Equipo Data Science Euskadi"
+
+data:
+  raw_path: "data/raw/"
+  processed_path: "data/processed/"
+  external_path: "data/external/"
+  models_path: "models/"
+
+  goiener:
+    url: "https://zenodo.org/record/7362094/files/goiener_public_data.zip"
+    n_files: 500                         # Procesar SOLO los primeros 500 archivos (desarrollo)
+    # Si se quiere procesar todos, cambiar a: n_files: null
+    target_columns:
+      - timestamp
+      - consumo_activo
+      - generacion
+      - codigo_postal
+
+  certificados:
+    url: "https://opendata.euskadi.eus/catalogo/-/certificados-de-eficiencia-energetica-de-edificios/"
+    # El script debe buscar el enlace de descarga CSV más reciente en la página.
+    output_file: "certificados_agregados_cp.csv"
+
+  meteorologia:
+    primary_source: "aemet"              # "aemet" o "euskalmet"
+    aemet_api_key_env_var: "AEMET_API_KEY"  # Se leerá de secrets.toml o variables de entorno
+    aemet_station_id: "1080"             # Bilbao
+    euskalmet_station_id: "C046"         # Bilbao
+    fallback_kaggle_dataset: "danielebertola/solar-energy"  # Si falla AEMET
+    variables:
+      - temperatura
+      - humedad_relativa
+      - radiacion_solar
+      - velocidad_viento
+      - precipitacion
+
+model:
+  target_column: "generacion"
+  test_size: 0.2
+  time_column: "timestamp"
+  id_column: "codigo_postal"
+  random_state: 42
+
+  xgboost:
+    n_estimators: [100, 200, 300]
+    max_depth: [3, 6, 9]
+    learning_rate: [0.01, 0.1, 0.3]
+    n_iter_random_search: 10
+
+  walk_forward:
+    initial_train_years: 3
+    step_months: 1
+
+business:
+  electricity_price_per_mwh: 100         # €/MWh
+  currency: "EUR"
+  co2_avoided_per_mwh_kg: 200            # kg CO2 / MWh renovable
+
+# Coordenadas de Bizkaia para cálculos solares
+location:
+  name: "Bilbao"
+  latitude: 43.2630
+  longitude: -2.9350
+  timezone: "Europe/Madrid"
+  altitude: 30
