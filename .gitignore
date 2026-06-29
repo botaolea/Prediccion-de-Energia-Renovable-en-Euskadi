@@ -7,7 +7,7 @@ data/external/
 !data/external/.gitkeep
 
 # Modelos entrenados (subir solo si son pequeños)
-models/*.pkl
+# models/*.pkl
 models/*.joblib
 !models/.gitkeep
 

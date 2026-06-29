@@ -17,7 +17,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/usuario/proyecto_energia_euskadi",
     packages=find_packages(),
-    python_requires=">=3.10",
+    python_requires=">=3.10<3.12",   
     install_requires=[
         "streamlit",
         "pandas",
