@@ -11,7 +11,7 @@ long_description = (this_directory / "README.md").read_text(encoding="utf-8") if
 setup(
     name="proyecto_energia_euskadi",
     version="1.0.0",
-    author="Equipo Data Science Euskadi",
+    author="Begoña Otaolea",
     description="Plataforma de predicción de generación solar fotovoltaica en Bizkaia/Euskadi",
     long_description=long_description,
     long_description_content_type="text/markdown",
