@@ -1,0 +1,5 @@
+Datos meteorológicos obtenidos de Open-Meteo Archive API
+URL: https://archive-api.open-meteo.com/v1/archive?latitude=43.263&longitude=-2.935&start_date=2023-06-29&end_date=2026-06-29&hourly=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,shortwave_radiation,cloud_cover&timezone=UTC
+Fecha descarga: 2026-06-29 11:54:11.410139
+Coordenadas: lat=43.263, lon=-2.935 (Bilbao)
+Período: 2023-06-29 a 2026-06-29
