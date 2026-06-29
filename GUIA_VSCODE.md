@@ -43,6 +43,33 @@ El script:
 
 ---
 
+## 🐧 Requisitos específicos para Linux (Ubuntu/Debian)
+
+Instalar Python, pip y el entorno virtual:
+
+```bash
+sudo apt update
+
+sudo apt install -y \
+python3 \
+python3-pip \
+python3-venv \
+python3-dev \
+build-essential \
+git
+```
+
+Comprobar la instalación:
+
+```bash
+python3 --version
+pip3 --version
+```
+
+Se recomienda Python **3.10 o 3.11**.
+
+Si utilizas Python 3.12, asegúrate de que todas las dependencias son compatibles.
+
 ## 🐛 Errores comunes y soluciones
 
 ### Error 1: `ModuleNotFoundError: No module named 'streamlit'`

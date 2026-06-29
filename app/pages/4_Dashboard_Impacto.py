@@ -16,6 +16,9 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
+import folium
+from streamlit_folium import st_folium
+
 from app.components.plots import plot_whatif_simulation
 from app.components.sidebar import render_footer
 from app.components.utils_streamlit import get_config, load_model
@@ -204,13 +207,6 @@ def _add_solar_panel_reference_layer(map_obj) -> None:
 
 def _render_mapa_bizkaia(predictor, price_per_mwh: float):
     """Renderiza un mapa de Bizkaia con potencial de generación por CP."""
-    try:
-        import folium
-        from streamlit_folium import st_folium
-    except ImportError:
-        st.warning("Folium no instalado. Mostrando tabla en su lugar.")
-        _render_table_bizkaia(predictor, price_per_mwh)
-        return
 
     cache_key = "bizkaia_map_predictions"
     map_predictions = st.session_state.setdefault(cache_key, {})
@@ -218,20 +214,33 @@ def _render_mapa_bizkaia(predictor, price_per_mwh: float):
     st.session_state[cache_key] = map_predictions
 
     # Crear mapa centrado en Bilbao
-    m = folium.Map(location=[43.2630, -2.9350], zoom_start=10)
+    m = folium.Map(
+        location=[43.2630, -2.9350],
+        zoom_start=10,
+        tiles="OpenStreetMap",
+    )
+
+    # Añadir capa de referencia
     _add_solar_panel_reference_layer(m)
 
     if predictor is None:
-        st.warning("Modelo no disponible para mapa predictivo. Mostrando ubicaciones.")
+        st.warning("⚠️ Modelo no disponible para mapa predictivo. Mostrando ubicaciones.")
+
         for cp, info in BIZKAIA_CP_REFERENCE.items():
             folium.Marker(
                 location=[info["lat"], info["lon"]],
-                popup=f"<b>{info['municipio']}</b><br>CP: {cp}<br>Tipo: {info['tipo']}",
+                popup=(
+                    f"<b>{info['municipio']}</b><br>"
+                    f"CP: {cp}<br>"
+                    f"Tipo: {info['tipo']}"
+                ),
                 tooltip=info["municipio"],
                 icon=folium.Icon(color="orange", icon="bolt", prefix="fa"),
             ).add_to(m)
+
     else:
         for cp, info in BIZKAIA_CP_REFERENCE.items():
+
             total_kwh = map_predictions.get(cp, 0.0)
             euros = kwh_to_euros(total_kwh, price_per_mwh)
 
@@ -244,7 +253,7 @@ def _render_mapa_bizkaia(predictor, price_per_mwh: float):
 
             folium.CircleMarker(
                 location=[info["lat"], info["lon"]],
-                radius=5 + total_kwh / 10,
+                radius=max(5, total_kwh / 10),
                 popup=folium.Popup(
                     f"<b>{info['municipio']}</b><br>"
                     f"CP: {cp}<br>"
@@ -256,12 +265,18 @@ def _render_mapa_bizkaia(predictor, price_per_mwh: float):
                 tooltip=f"{info['municipio']}: {total_kwh:.1f} kWh",
                 color=color,
                 fill=True,
-                fillOpacity=0.7,
+                fill_color=color,
+                fill_opacity=0.7,
             ).add_to(m)
 
     folium.LayerControl().add_to(m)
-    st_folium(m, width=800, height=500)
 
+    st_folium(
+        m,
+        width=800,
+        height=500,
+        returned_objects=[],
+    )
 
 def _render_table_bizkaia(predictor, price_per_mwh: float):
     """Tabla alternativa al mapa."""

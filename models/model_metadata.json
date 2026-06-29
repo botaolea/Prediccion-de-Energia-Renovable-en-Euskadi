@@ -47,6 +47,6 @@
   ],
   "target_col": "generacion",
   "time_col": "timestamp",
-  "saved_at": "2026-06-26T09:57:04.160563",
+  "saved_at": "2026-06-29T11:13:30.916501",
   "models_path": "models/xgboost_model.pkl"
 }

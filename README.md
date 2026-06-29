@@ -169,7 +169,7 @@ proyecto_energia_euskadi/
 
 ### Requisitos previos
 
-- Python 3.10 o superior
+- Compatible con Python 3.10, 3.11 y 3.12.
 - 4 GB de espacio en disco (para GoiEner completo)
 - Conexión a internet (para descarga de datos)
 
@@ -187,7 +187,11 @@ source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate     # Windows
 
 # 3. Instalar dependencias
+python3 -m venv venv
+source venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
+
 
 # 4. Instalar el paquete en modo desarrollo (opcional)
 pip install -e .
